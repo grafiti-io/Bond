@@ -320,10 +320,11 @@ extension NSObject {
   }
 
   private class func _swizzleDeinit(onDeinit: @escaping (NSObject) -> Void) {
-    let selector = sel_registerName("dealloc")
     var originalImplementation: IMP? = nil
 
     let swizzledImplementationBlock: @convention(block) (UnsafeRawPointer) -> Void = { me in
+      guard selector = sel_registerName("dealloc") else { return }
+      
       onDeinit(unsafeBitCast(me, to: NSObject.self))
       let superImplementation = class_getMethodImplementation(class_getSuperclass(self), selector)
       if let imp = originalImplementation ?? superImplementation {
