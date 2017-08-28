@@ -320,8 +320,7 @@ extension NSObject {
   }
 
   private class func _swizzleDeinit(onDeinit: @escaping (NSObject) -> Void) {
-    guard selector = sel_registerName("dealloc") else { return }
-    
+    guard let selector = sel_registerName("dealloc") else { return }
     var originalImplementation: IMP? = nil
 
     let swizzledImplementationBlock: @convention(block) (UnsafeRawPointer) -> Void = { me in
